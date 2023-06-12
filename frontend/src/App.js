@@ -6,7 +6,7 @@ const App = () => {
 
   useEffect(() => {
     // Fetch stock prices from Flask backend
-    fetch('/api/stock-prices')
+    fetch('http://localhost:5000/api/stock-prices')  // Update the URL here
       .then((response) => response.json())
       .then((data) => setStockPrices(data.stockPrices))
       .catch((error) => console.error(error));

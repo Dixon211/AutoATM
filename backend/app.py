@@ -1,6 +1,9 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
+import algos
 
 app = Flask(__name__)
+CORS(app)
 
 # Define your Flask routes and logic here
 @app.route('/api/stock-prices')
