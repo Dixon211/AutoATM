@@ -1,22 +1,39 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 import algos
+from dotenv import load_dotenv
+from datetime import datetime
+import robin_stocks.robinhood as r
+import os
+import requests
+load_dotenv()
+
+robin_user = os.environ.get("robinhood_username")
+robin_pass = os.environ.get("robinhood_password")
+r.login(username=robin_user,
+        password=robin_pass,
+        expiresIn=86400,
+        by_sms=True)
 
 app = Flask(__name__)
 CORS(app)
+
 
 # Define your Flask routes and logic here
 @app.route('/api/stock-prices')
 def get_stock_prices():
     print("received req")
 
-    # Retrieve stock prices from your data source
-    stock_prices = [
-        {'date': '2023-06-10', 'price': 100},
-        {'date': '2023-06-11', 'price': 105},
-        {'date': '2023-06-12', 'price': 95},
-        # ... more data
-    ]
+    # get top stocks
+    top100listOfDicts = r.get_top_100()
+    symbol = top100listOfDicts[0]["symbol"]
+
+    # Fetch 2 years of 5-minute interval historical data for symbol
+    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='5minute', span='year')
+    stock_prices = r.stocks.get_stock_historicals(symbol, interval='hour', span='month')
+
+    print(stock_prices[0].keys())
+    
     return jsonify({'stockPrices': stock_prices})
 
 def runAsUnicorn():

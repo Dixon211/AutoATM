@@ -14,7 +14,7 @@
 # %%
 from dotenv import load_dotenv
 from datetime import datetime
-import robin_stocks.robinhood as rs
+import robin_stocks.robinhood as r
 import os
 import requests
 load_dotenv()
@@ -152,17 +152,7 @@ def BuyLowSellHigh(stockListOfDicts):
         else:
             stockPortfolio[stockSymbol].update(stockDict)
             
-        
-
 def runCyclic():
-
-    # %%
-    robin_user = os.environ.get("robinhood_username")
-    robin_pass = os.environ.get("robinhood_password")
-    rs.login(username=robin_user,
-            password=robin_pass,
-            expiresIn=86400,
-            by_sms=True)
 
     # %%
     import time
