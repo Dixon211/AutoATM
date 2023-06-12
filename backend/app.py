@@ -36,6 +36,9 @@ def get_stock_prices():
     
     return jsonify({'stockPrices': stock_prices})
 
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', debug=True)
+
 def runAsUnicorn():
 
     # Run the Flask app with Unicorn server
@@ -63,6 +66,3 @@ def runAsUnicorn():
     }
 
     FlaskApplication(app, options).run()
-
-if __name__ == "__main__":
-    app.run(debug=True)
