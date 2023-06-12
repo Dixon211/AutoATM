@@ -1,2 +1,4 @@
 
-.env
+*.env
+*ipynb_checkpoints
+.ipynb_checkpoints/algos-checkpoint.ipynb
