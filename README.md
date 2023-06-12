@@ -1,6 +1,6 @@
-![image](https://github.com/Dixon211/AutoATM/assets/131546168/e3b257e1-badd-4a5d-a21e-f2b3d7a58b20)
-AutoATM
-Robots Making Money for You!
+![image](https://github.com/Dixon211/AutoATM/assets/131546168/e3b257e1-badd-4a5d-a21e-f2b3d7a58b20)  
+# AutoATM
+## Robots Making Money for You!
 GUI:
 	1. 
 
