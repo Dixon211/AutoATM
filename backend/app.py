@@ -23,19 +23,7 @@ r.login(username=robin_user,
 app = Flask(__name__)
 CORS(app)
 
-
-# Define your Flask routes and logic here
-@app.route('/api/stock-prices', methods=["GET"])
-def get_stock_prices():
-    print("received req")
-
-    # get top stocks
-    top100listOfDicts = r.get_top_100()
-    symbol = top100listOfDicts[0]["symbol"]
-
-    # Fetch 2 years of 5-minute interval historical data for symbol
-    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='5minute', span='year')
-    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='day', span='5year')
+def getHistory(symbol):
 
     # 1 year ago
     start_time = datetime(2022, 6, 11)  # Set your desired start time
@@ -54,8 +42,8 @@ def get_stock_prices():
         # write for future reference
         stock_prices.to_json(outfilename, orient="index")
 
+
     stock_prices["time"]   = stock_prices.index.strftime('%Y-%m-%d %H:%M')
-    #stock_prices["time"]   = stock_prices.index.date
 
     # Resample to 1-hour intervals and interpolate missing values
     stock_prices_resampled = stock_prices.asfreq('30min', method='ffill')
@@ -63,9 +51,45 @@ def get_stock_prices():
     stock_prices_resampled["time"]   = stock_prices_resampled.index.strftime('%Y-%m-%d %H:%M')
     stock_prices_resampled["symbol"] = symbol
     
-    print(stock_prices_resampled.columns)
+    return stock_prices_resampled
+
+# Endpoint to fetch a list of 100 stocks
+@app.route('/api/stocks', methods=['GET'])
+def get_stocks():
+    # get top 100 stocks
+    stocks = r.get_top_100()
+    return jsonify({'stocks': stocks})
+
+# Endpoint to fetch historical data for a stock
+@app.route('/api/stock-history', methods=['GET'])
+def get_stock_history():
+    symbol = request.args.get('symbol')
+
+    if not symbol:
+        return jsonify({'error': 'Symbol parameter is required.'}), 400
     
-    retval = "{\"stockPrices\": " + stock_prices_resampled[-2000:].to_json(orient='records') + "}"
+    try:
+        stock_prices = getHistory(symbol=symbol)
+        return jsonify({'history': stock_prices})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Define your Flask routes and logic here
+@app.route('/api/stock-prices', methods=["GET"])
+def get_stock_prices():
+    print("received req")
+
+    # get top stocks
+    top100listOfDicts = r.get_top_100()
+    symbol = top100listOfDicts[0]["symbol"]
+
+    # Fetch 2 years of 5-minute interval historical data for symbol
+    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='5minute', span='year')
+    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='day', span='5year')
+    stock_prices = getHistory(symbol=symbol)
+    print(stock_prices.columns)
+    
+    retval = "{\"stockPrices\": " + stock_prices[-2000:].to_json(orient='records') + "}"
 
     return retval
 
