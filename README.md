@@ -1,6 +1,13 @@
 ![image](https://github.com/Dixon211/AutoATM/assets/131546168/e3b257e1-badd-4a5d-a21e-f2b3d7a58b20)  
 # AutoATM
 ## Robots Making Money for You!
+
+### Development   
+- Open 2 terminals (or split vscode terminal)
+- in one, run `cd frontend && npm start`
+- in the other, run `cd backend && python app.py`
+- Appreciate RH #1 stock chart
+
 GUI:
 	1. 
 
