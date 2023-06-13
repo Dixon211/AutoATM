@@ -51,7 +51,7 @@ def getHistory(symbol):
     start_time = datetime(2022, 6, 11)  # Set your desired start time
     os.makedirs(os.path.join(here, "histories"), exist_ok=True)
     outfilename = os.path.join(here, "histories", start_time.strftime("%m%d%Y") + "_" + symbol + ".json")
-    
+    1   
     if os.path.exists(outfilename):
         # load file if available
         # # Read JSON file into a DataFrame
@@ -60,7 +60,7 @@ def getHistory(symbol):
     else:
         stock = yf.Ticker(symbol)
         stock_prices = stock.history(start=start_time, period="1y", interval="1h")
-
+        
         # write for future reference
         stock_prices.to_json(outfilename, orient="index")
 
@@ -92,7 +92,7 @@ def get_stock_history():
     
     try:
         stock_prices = getHistory(symbol=symbol)
-        retval = "{\"stockPrices\": " + stock_prices[-2000:].to_json(orient='records') + "}"
+        retval = "{\"stockPrices\": " + stock_prices.to_json(orient='records') + "}"
         return retval
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -112,7 +112,7 @@ def get_stock_prices():
     stock_prices = getHistory(symbol=symbol)
     print(stock_prices.columns)
     
-    retval = "{\"stockPrices\": " + stock_prices[-2000:].to_json(orient='records') + "}"
+    retval = "{\"stockPrices\": " + stock_prices.to_json(orient='records') + "}"
 
     return retval
 

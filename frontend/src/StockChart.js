@@ -6,30 +6,35 @@ import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, To
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
 
 const StockChart = ({ stockPrices }) => {
-// Get the symbol from the first price in stockPrices
-  const symbol = stockPrices.length > 0 ? stockPrices[0].symbol : '';
 
-  // Convert the stockPrices data to chart.js format
-  const chartData = {
-    
-    labels: stockPrices.map((stock) => stock.time),
-    datasets: [
-      {
-        label: 'Stock Price',
-        data: stockPrices.map((stock) => stock.Close),
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
-  };
+    if (!stockPrices) {
+        return null; // or any other fallback component or loading indicator
+    }
 
-  return (
-    <div>
-      <h2>{symbol}</h2>
-      <Line data={chartData} />
-    </div>
-  );
+    // Get the symbol from the first price in stockPrices
+    const symbol = stockPrices.length > 0 ? stockPrices[0].symbol : '';
+
+    // Convert the stockPrices data to chart.js format
+    const chartData = {
+
+        labels: stockPrices.map((stock) => stock.time),
+        datasets: [
+            {
+                label: 'Stock Price',
+                data: stockPrices.map((stock) => stock.Close),
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1,
+            },
+        ],
+    };
+
+    return (
+        <div>
+            <h2>{symbol}</h2>
+            <Line data={chartData} />
+        </div>
+    );
 };
 
 export default StockChart;
