@@ -4,9 +4,14 @@ import algos
 from dotenv import load_dotenv
 from datetime import datetime
 import robin_stocks.robinhood as r
+import yfinance as yf
 import os
 import requests
+import json
+import pandas as pd
 load_dotenv()
+
+here = os.path.dirname(os.path.abspath(__file__))
 
 robin_user = os.environ.get("robinhood_username")
 robin_pass = os.environ.get("robinhood_password")
@@ -20,7 +25,7 @@ CORS(app)
 
 
 # Define your Flask routes and logic here
-@app.route('/api/stock-prices')
+@app.route('/api/stock-prices', methods=["GET"])
 def get_stock_prices():
     print("received req")
 
@@ -30,11 +35,39 @@ def get_stock_prices():
 
     # Fetch 2 years of 5-minute interval historical data for symbol
     #stock_prices = r.stocks.get_stock_historicals(symbol, interval='5minute', span='year')
-    stock_prices = r.stocks.get_stock_historicals(symbol, interval='hour', span='month')
+    #stock_prices = r.stocks.get_stock_historicals(symbol, interval='day', span='5year')
 
-    print(stock_prices[0].keys())
+    # 1 year ago
+    start_time = datetime(2022, 6, 11)  # Set your desired start time
+    os.makedirs(os.path.join(here, "histories"), exist_ok=True)
+    outfilename = os.path.join(here, "histories", start_time.strftime("%m%d%Y") + "_" + symbol + ".json")
     
-    return jsonify({'stockPrices': stock_prices})
+    if os.path.exists(outfilename):
+        # load file if available
+        # # Read JSON file into a DataFrame
+        stock_prices = pd.read_json(outfilename, orient="index")
+        
+    else:
+        stock = yf.Ticker(symbol)
+        stock_prices = stock.history(start=start_time, period="1y", interval="1h")
+
+        # write for future reference
+        stock_prices.to_json(outfilename, orient="index")
+
+    stock_prices["time"]   = stock_prices.index.strftime('%Y-%m-%d %H:%M')
+    #stock_prices["time"]   = stock_prices.index.date
+
+    # Resample to 1-hour intervals and interpolate missing values
+    stock_prices_resampled = stock_prices.asfreq('30min', method='ffill')
+
+    stock_prices_resampled["time"]   = stock_prices_resampled.index.strftime('%Y-%m-%d %H:%M')
+    stock_prices_resampled["symbol"] = symbol
+    
+    print(stock_prices_resampled.columns)
+    
+    retval = "{\"stockPrices\": " + stock_prices_resampled[-2000:].to_json(orient='records') + "}"
+
+    return retval
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

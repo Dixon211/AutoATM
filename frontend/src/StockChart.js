@@ -12,11 +12,11 @@ const StockChart = ({ stockPrices }) => {
   // Convert the stockPrices data to chart.js format
   const chartData = {
     
-    labels: stockPrices.map((stock) => stock.begins_at),
+    labels: stockPrices.map((stock) => stock.time),
     datasets: [
       {
         label: 'Stock Price',
-        data: stockPrices.map((stock) => stock.close_price),
+        data: stockPrices.map((stock) => stock.Close),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
