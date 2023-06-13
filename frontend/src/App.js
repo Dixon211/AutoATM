@@ -20,10 +20,11 @@ const App = () => {
   }, []);
 
   const handleStockClick = (symbol) => {
+    console.log("handling click")
     // Fetch historical data for the selected stock
     fetch(`http://compai.local:5000/api/stock-history?symbol=${symbol}`)
       .then((response) => response.json())
-      .then((data) => setStockPrices(data.history))
+      .then((data) => setStockPrices(data.stockPrices))
       .catch((error) => console.error(error));
   };
 

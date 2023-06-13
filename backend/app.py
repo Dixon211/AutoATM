@@ -22,10 +22,32 @@ r.login(username=robin_user,
 
 app = Flask(__name__)
 CORS(app)
+from datetime import datetime
+import time
 
-def getHistory(symbol):
+def getTop100():
 
     # 1 year ago
+    now = datetime.now()
+
+    outfilename = os.path.join(here, "histories", now.strftime("%m%d%Y") + "_top100.json")
+
+    if os.path.exists(outfilename):
+        # load file if available
+        # # Read JSON file into a DataFrame
+        with open(outfilename, 'r') as f:
+            top100 = json.loads(f.read())
+        
+    else:
+        top100 = r.get_top_100()
+        # write for future reference
+        with open(outfilename, 'w+') as f:
+            f.write(json.dumps(top100))
+            
+    return top100
+
+
+def getHistory(symbol):
     start_time = datetime(2022, 6, 11)  # Set your desired start time
     os.makedirs(os.path.join(here, "histories"), exist_ok=True)
     outfilename = os.path.join(here, "histories", start_time.strftime("%m%d%Y") + "_" + symbol + ".json")
@@ -42,9 +64,6 @@ def getHistory(symbol):
         # write for future reference
         stock_prices.to_json(outfilename, orient="index")
 
-
-    stock_prices["time"]   = stock_prices.index.strftime('%Y-%m-%d %H:%M')
-
     # Resample to 1-hour intervals and interpolate missing values
     stock_prices_resampled = stock_prices.asfreq('30min', method='ffill')
 
@@ -52,6 +71,7 @@ def getHistory(symbol):
     stock_prices_resampled["symbol"] = symbol
     
     return stock_prices_resampled
+
 
 # Endpoint to fetch a list of 100 stocks
 @app.route('/api/stocks', methods=['GET'])
@@ -68,9 +88,12 @@ def get_stock_history():
     if not symbol:
         return jsonify({'error': 'Symbol parameter is required.'}), 400
     
+    print("Getting stock history for " + symbol)
+    
     try:
         stock_prices = getHistory(symbol=symbol)
-        return jsonify({'history': stock_prices})
+        retval = "{\"stockPrices\": " + stock_prices[-2000:].to_json(orient='records') + "}"
+        return retval
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -80,7 +103,7 @@ def get_stock_prices():
     print("received req")
 
     # get top stocks
-    top100listOfDicts = r.get_top_100()
+    top100listOfDicts = getTop100()
     symbol = top100listOfDicts[0]["symbol"]
 
     # Fetch 2 years of 5-minute interval historical data for symbol

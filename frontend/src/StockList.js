@@ -16,12 +16,9 @@ const StockList = () => {
   useEffect(() => {
     if (selectedStock) {
       fetch(`http://localhost:5000/api/stock-history?symbol=${selectedStock}`)
-        .then((response) => response.json())
-        .then((data) => {
-          // Process the historical data as needed
-          console.log(data);
-        })
-        .catch((error) => console.error(error));
+        .then((response) => response.json()) 
+        .then((data) => setStocks(data.stocks))
+        .catch((error) => console.error(error)); 
     }
   }, [selectedStock]);
 
