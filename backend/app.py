@@ -70,6 +70,10 @@ def getHistory(symbol):
     # Resample to 1-hour intervals and interpolate missing values
     stock_prices_resampled = stock_prices.asfreq("30min", method="ffill")
 
+    new_additions = stock_prices_resampled[~stock_prices_resampled.index.isin(stock_prices.index)]
+    stock_prices_resampled.loc[new_additions.index, 'Volume'] = 0
+
+
     # stock_prices_resampled_na = stock_prices.asfreq('30min', method='fillna')
     # stock_prices_resampled["Volume"] = stock_prices_resampled_na["Volume"]
 
