@@ -25,6 +25,17 @@ const StockChart = ({ stockPrices }) => {
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1,
+                yAxisID: 'price-axis',
+
+            },
+            {
+                label: 'Stock Volume',
+                data: stockPrices.map((stock) => stock.Volume),
+                fill: false,
+                borderColor: 'rgb(192, 192, 0)',
+                tension: 0.1,
+                yAxisID: 'volume-axis',
+
             },
         ],
     };
