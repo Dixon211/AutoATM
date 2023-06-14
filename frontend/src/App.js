@@ -7,13 +7,13 @@ const App = () => {
 
   useEffect(() => {
     // Fetch stock prices from Flask backend
-    fetch('http://compai.local:5000/api/stock-prices')
+    fetch('http://localhost:5000/api/stock-prices')
       .then((response) => response.json())
       .then((data) => setStockPrices(data.stockPrices))
       .catch((error) => console.error(error));
 
     // Fetch stock list from Flask backend
-    fetch('http://compai.local:5000/api/stocks')
+    fetch('http://localhost:5000/api/stocks')
       .then((response) => response.json())
       .then((data) => setStockList(data.stocks))
       .catch((error) => console.error(error));
@@ -22,7 +22,7 @@ const App = () => {
   const handleStockClick = (symbol) => {
     console.log("handling click")
     // Fetch historical data for the selected stock
-    fetch(`http://compai.local:5000/api/stock-history?symbol=${symbol}`)
+    fetch(`http://localhost:5000/api/stock-history?symbol=${symbol}`)
       .then((response) => response.json())
       .then((data) => setStockPrices(data.stockPrices))
       .catch((error) => console.error(error));
