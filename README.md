@@ -4,8 +4,14 @@
 
 ### Development   
 - Open 2 terminals (or split vscode terminal)
-- in one, run `cd frontend && npm start`
-- in the other, run `cd backend && python app.py`
+- in one, run 
+- `cd frontend`
+- `npm install --global yarn`
+- `yarn install`
+- `yarn start`
+- in the other, run 
+- `cd backend`
+- `python app.py`
 - Appreciate RH #1 stock chart
 
 GUI:
