@@ -16,8 +16,11 @@ here = os.path.dirname(os.path.abspath(__file__))
 
 robin_user = os.environ.get("robinhood_username")
 robin_pass = os.environ.get("robinhood_password")
-r.login(username=robin_user, password=robin_pass, expiresIn=86400, by_sms=True)
-
+try:
+    r.login(username=robin_user, password=robin_pass, expiresIn=86400, by_sms=True)
+    print("login successful")
+except Exception as error:
+    print(f'login failed: {error}')
 app = Flask(__name__)
 CORS(app)
 from datetime import datetime

@@ -14,7 +14,7 @@
 # %%
 from dotenv import load_dotenv
 from datetime import datetime
-import robin_stocks.robinhood as r
+import robin_stocks.robinhood as rs
 import os
 import requests
 
