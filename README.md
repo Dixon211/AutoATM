@@ -10,6 +10,7 @@
 - `yarn install`
 - `yarn start`
 - in the other, run 
+- `pip install -r requirements.txt`
 - `cd backend`
 - `python app.py`
 - Appreciate RH #1 stock chart
