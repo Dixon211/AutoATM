@@ -14,8 +14,8 @@ load_dotenv()
 
 here = os.path.dirname(os.path.abspath(__file__))
 
-robin_user = os.environ.get("robinhood_username")
-robin_pass = os.environ.get("robinhood_password")
+robin_user = os.environ.get("robinhood_user")
+robin_pass = os.environ.get("robinhood_pass")
 try:
     r.login(username=robin_user, password=robin_pass, expiresIn=86400, by_sms=True)
     print("login successful")
