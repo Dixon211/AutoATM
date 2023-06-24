@@ -1,3 +1,14 @@
 robin_stocks
 flask_cors
 yfinance
+jupyter
+#npm
+flask_cors
+dotenv
+flask
+matplotlib
+dotenv
+
+
+
+#pip install -r requirements.txtp[i p
