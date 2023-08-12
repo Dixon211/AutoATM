@@ -21,15 +21,14 @@ def assess(company_name = "NVIDIA"):
         f"Return on Equity of {company_name}"
     ]
 
-    prompt = "Please provide a numerical assessment between 0 and 1 for the following Warren Buffett principles:\n"
+    prompt = "Please provide a numerical assessment between 0 and 100 for the following Warren Buffett principles in the form of a python list:\n"
     prompt += '\n'.join(principles)
-    prompt += f"\nPlease provide the assessment for {company_name} in the form of a python list"
     openai.api_key = os.getenv('OPENAI_API_KEY')
     print(openai.Model.list())
     print(prompt)
     
     response = openai.Completion.create(
-    engine="text-curie-001",
+    engine="text-davinci-003",
     prompt=prompt,
     max_tokens=1500
     )
